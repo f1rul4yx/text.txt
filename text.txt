@@ -1,0 +1,57 @@
+# Service
+sudo apt-get install proftpd -y
+
+# Create User and Group
+sudo useradd -m -s /bin/bash ${nameUser}
+sudo passwd {nameUser}
+sudo groupadd ${nameGroup}
+sudo usermod -g ${nameGroup} ${nameUser}
+sudo groups ${nameGroup}
+
+# Config
+UseIPv6 off
+RootLogin off
+RequireValidShell off
+DefaultRoot ~
+
+<Limit LOGIN>
+  AllowGroup ftpgroup
+  AllowUser ftp
+</Limit>
+
+<Directory /home/Jose/>
+  Umask 022
+  AllowOverwrite off
+  <Limit ALL>
+    AllowUser Jose
+    DenyAll
+  </Limit>
+</Directory>
+
+<Directory /home/Maria/>
+  Umask 022
+  AllowOverwrite off
+  <Limit ALL>
+    AllowUser Maria
+    DenyAll
+  </Limit>
+</Directory>
+
+<Anonymous /var/ftp/>
+  Umask 022
+  AllowOverwrite off
+  User ftp
+  Group ftp
+</Anonymous>
+
+# Commands FTP Fast
+ftp ${address}
+put ${nameFile} ${routeAddress}
+get ${nameFile}
+bin	put ${nameTar}.tar.gz ${routeAddress}
+passive or pass
+prompt
+
+# Commands
+ps -aux
+tar -czvf ${nameTar}.tar.gz ${filesName}
